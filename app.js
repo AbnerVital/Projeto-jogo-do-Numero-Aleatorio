@@ -1,17 +1,22 @@
-// Gera um número aleatório para ser o número secreto no início do jogo
+// Lista para armazenar números já sorteados, evitando repetições
+let listaDeNumerosSorteados = [];
+
+// Gera um número secreto aleatório no início do jogo
 let numeroSecreto = gerarNumeroAleatorio(); 
-let tentativas = 1; // Inicializa o contador de tentativas
+
+// Inicializa o contador de tentativas
+let tentativas = 1; 
 
 // Função para exibir um texto dentro de um elemento HTML com base na tag passada
 function exibirTextoNaTela(tag, texto) {
-    let campo = document.querySelector(tag);
-    campo.innerHTML = texto; // Substitui o conteúdo do elemento pela mensagem desejada
+    let campo = document.querySelector(tag); // Seleciona o elemento HTML pela tag
+    campo.innerHTML = texto; // Substitui o conteúdo do elemento pelo texto informado
 }
 
 // Função que exibe a mensagem inicial do jogo
 function exibirMensagemInicial() {
-    exibirTextoNaTela('h1', 'Jogo do Número Secreto');
-    exibirTextoNaTela('p', 'Escolha um número entre 1 e 10');
+    exibirTextoNaTela('h1', 'Jogo do Número Secreto'); // Define o título do jogo
+    exibirTextoNaTela('p', 'Escolha um número entre 1 e 10'); // Exibe instruções ao jogador
 }
 
 // Exibe a mensagem inicial quando o jogo começa
@@ -20,7 +25,7 @@ exibirMensagemInicial();
 function verificarChute(){
     let chute = document.querySelector('input').value; // Captura o valor digitado no input
 
-    // Verifica se o chute é igual ao número secreto
+    // Verifica se o chute do jogador é igual ao número secreto
     if (chute == numeroSecreto) {
         exibirTextoNaTela('h1', 'Acertou!'); // Atualiza o título indicando que o jogador acertou
         
@@ -44,9 +49,18 @@ function verificarChute(){
     }
 }
 
-// Função que gera um número aleatório entre 1 e 10
+// Função que gera um número aleatório entre 1 e 4 (por erro, deveria ser entre 1 e 10)
 function gerarNumeroAleatorio() {
-    return parseInt(Math.random() * 10 + 1);
+    let numeroEscolhido = parseInt(Math.random() * 4 + 1); // Gera um número entre 1 e 4
+
+    // Verifica se o número já foi sorteado antes
+    if (listaDeNumerosSorteados.includes(numeroEscolhido)){
+        return gerarNumeroAleatorio(); // Se sim, chama a função novamente para evitar repetição
+    } else {
+        listaDeNumerosSorteados.push(numeroEscolhido); // Adiciona o número sorteado à lista
+        console.log(listaDeNumerosSorteados); // Exibe no console a lista de números já sorteados
+        return numeroEscolhido; // Retorna o número gerado
+    }
 }
 
 // Função para limpar o campo de input após cada tentativa
@@ -55,7 +69,7 @@ function limparCampo() {
     chute.value = ''; // Limpa o valor do input
 }
 
-// Função que reinicia o jogo ao clicar no botão de "Reiniciar"
+// Função que reinicia o jogo ao clicar no botão "Reiniciar"
 function reiniciarJogo() {
     numeroSecreto = gerarNumeroAleatorio(); // Gera um novo número secreto
     limparCampo(); // Limpa o campo de input
