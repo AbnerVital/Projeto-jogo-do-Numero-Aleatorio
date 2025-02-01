@@ -1,81 +1,88 @@
-// Lista para armazenar nÃºmeros jÃ¡ sorteados, evitando repetiÃ§Ãµes
+// Lista para armazenar números já sorteados, evitando repetições
 let listaDeNumerosSorteados = [];
+let numeroLimite = 10; // Limite superior do número secreto
 
-// Gera um nÃºmero secreto aleatÃ³rio no inÃ­cio do jogo
+// Gera um número secreto aleatório no início do jogo
 let numeroSecreto = gerarNumeroAleatorio(); 
 
 // Inicializa o contador de tentativas
 let tentativas = 1; 
 
-// FunÃ§Ã£o para exibir um texto dentro de um elemento HTML com base na tag passada
+// Função para exibir um texto dentro de um elemento HTML com base na tag passada
 function exibirTextoNaTela(tag, texto) {
-    let campo = document.querySelector(tag); // Seleciona o elemento HTML pela tag
-    campo.innerHTML = texto; // Substitui o conteÃºdo do elemento pelo texto informado
+    let campo = document.querySelector(tag); // Seleciona o elemento HTML pela tag (h1, p, etc.)
+    campo.innerHTML = texto; // Substitui o conteúdo do elemento pelo texto informado
 }
 
-// FunÃ§Ã£o que exibe a mensagem inicial do jogo
+// Função que exibe a mensagem inicial do jogo
 function exibirMensagemInicial() {
-    exibirTextoNaTela('h1', 'Jogo do NÃºmero Secreto'); // Define o tÃ­tulo do jogo
-    exibirTextoNaTela('p', 'Escolha um nÃºmero entre 1 e 10'); // Exibe instruÃ§Ãµes ao jogador
+    exibirTextoNaTela('h1', 'Jogo do Número Secreto'); // Define o título do jogo
+    exibirTextoNaTela('p', 'Escolha um número entre 1 e 10'); // Exibe instruções ao jogador
 }
 
-// Exibe a mensagem inicial quando o jogo comeÃ§a
+// Exibe a mensagem inicial quando o jogo começa
 exibirMensagemInicial();
 
+// Função que verifica o chute do jogador
 function verificarChute(){
     let chute = document.querySelector('input').value; // Captura o valor digitado no input
 
-    // Verifica se o chute do jogador Ã© igual ao nÃºmero secreto
+    // Verifica se o chute do jogador é igual ao número secreto
     if (chute == numeroSecreto) {
-        exibirTextoNaTela('h1', 'Acertou!'); // Atualiza o tÃ­tulo indicando que o jogador acertou
+        exibirTextoNaTela('h1', 'Acertou!'); // Atualiza o título indicando que o jogador acertou
         
         // Define a palavra correta para "tentativa(s)", ajustando singular/plural
         let palavraTentativa = tentativas > 1 ? 'tentativas' : 'tentativa';
-        let mensagemTentativas = `VocÃª descobriu o nÃºmero secreto com ${tentativas} ${palavraTentativa}!`;
+        let mensagemTentativas = `Você descobriu o número secreto com ${tentativas} ${palavraTentativa}!`;
         exibirTextoNaTela('p', mensagemTentativas); // Exibe a mensagem de acerto
         
-        // Habilita o botÃ£o de reiniciar, permitindo um novo jogo
+        // Habilita o botão de reiniciar, permitindo um novo jogo
         document.getElementById('reiniciar').removeAttribute('disabled');
 
     } else {
-        // Se o chute for maior que o nÃºmero secreto, informa ao usuÃ¡rio
+        // Se o chute for maior que o número secreto, informa ao usuário
         if (chute > numeroSecreto){
-            exibirTextoNaTela('p', 'O nÃºmero secreto Ã© menor');
-        } else { // Se for menor, informa que o nÃºmero secreto Ã© maior
-            exibirTextoNaTela('p', 'O nÃºmero secreto Ã© maior');
+            exibirTextoNaTela('p', 'O número secreto é menor');
+        } else { // Se for menor, informa que o número secreto é maior
+            exibirTextoNaTela('p', 'O número secreto é maior');
         }
-        tentativas++; // Incrementa o nÃºmero de tentativas
+        tentativas++; // Incrementa o número de tentativas
         limparCampo(); // Limpa o input para um novo chute
     }
 }
 
-// FunÃ§Ã£o que gera um nÃºmero aleatÃ³rio entre 1 e 4 (por erro, deveria ser entre 1 e 10)
+// Função que gera um número aleatório entre 1 e 10
 function gerarNumeroAleatorio() {
-    let numeroEscolhido = parseInt(Math.random() * 4 + 1); // Gera um nÃºmero entre 1 e 4
+    let numeroEscolhido = parseInt(Math.random() * numeroLimite + 1); // Gera um número entre 1 e 10
+    let quantidadeDeElementosNaLista = listaDeNumerosSorteados.length;
 
-    // Verifica se o nÃºmero jÃ¡ foi sorteado antes
+    // Se todos os números já foram sorteados, reseta a lista
+    if (quantidadeDeElementosNaLista == numeroLimite){
+        listaDeNumerosSorteados = [];
+    }
+    // Verifica se o número já foi sorteado antes
     if (listaDeNumerosSorteados.includes(numeroEscolhido)){
-        return gerarNumeroAleatorio(); // Se sim, chama a funÃ§Ã£o novamente para evitar repetiÃ§Ã£o
+        return gerarNumeroAleatorio(); // Se sim, chama a função novamente para evitar repetição
     } else {
-        listaDeNumerosSorteados.push(numeroEscolhido); // Adiciona o nÃºmero sorteado Ã  lista
-        console.log(listaDeNumerosSorteados); // Exibe no console a lista de nÃºmeros jÃ¡ sorteados
-        return numeroEscolhido; // Retorna o nÃºmero gerado
+        listaDeNumerosSorteados.push(numeroEscolhido); // Adiciona o número sorteado à lista
+        console.log(listaDeNumerosSorteados); // Exibe no console a lista de números já sorteados
+        return numeroEscolhido; // Retorna o número gerado
     }
 }
 
-// FunÃ§Ã£o para limpar o campo de input apÃ³s cada tentativa
+// Função para limpar o campo de input após cada tentativa
 function limparCampo() {
     let chute = document.querySelector('input'); // Captura o campo de input
     chute.value = ''; // Limpa o valor do input
 }
 
-// FunÃ§Ã£o que reinicia o jogo ao clicar no botÃ£o "Reiniciar"
+// Função que reinicia o jogo ao clicar no botão "Reiniciar"
 function reiniciarJogo() {
-    numeroSecreto = gerarNumeroAleatorio(); // Gera um novo nÃºmero secreto
+    numeroSecreto = gerarNumeroAleatorio(); // Gera um novo número secreto
     limparCampo(); // Limpa o campo de input
     tentativas = 1; // Reseta o contador de tentativas
     exibirMensagemInicial(); // Reexibe a mensagem inicial do jogo
     
-    // Desabilita o botÃ£o de reinÃ­cio atÃ© que o usuÃ¡rio acerte novamente
+    // Desabilita o botão de reinício até que o usuário acerte novamente
     document.getElementById('reiniciar').setAttribute('disabled', true);
 }
